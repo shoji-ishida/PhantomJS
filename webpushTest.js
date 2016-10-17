@@ -38,11 +38,17 @@ function waitFor(testFx, onReady, timeOutMillis) {
 
 var page = require('webpage').create();
 var system = require('system');
+
+if (system.args.length === 1) {
+    console.log('Usage: webpushTest.js <some URL>');
+    phantom.exit();
+}
+
 var addr = system.args[1];
 
-console.log("cookie="+phantom.cookiesEnabled);
+//console.log("cookie="+phantom.cookiesEnabled);
 page.onConsoleMessage = function(msg) {
-  console.log(msg);
+    console.log(msg);
 }
 
 page.open(addr, function (status) {
@@ -58,36 +64,36 @@ page.open(addr, function (status) {
                 return $("#cwp-WebpushFrame").is(":visible");
             });
         }, function() {
-           console.log("The PUSH should be visible now.");
-           page.render('webpush_test_1.png');
+            console.log("The PUSH should be visible now.");
+            page.render('webpush_test_1.png');
 
-           // click on close button
-	   clickOnClose();
-           phantom.exit();
+            // click on close button
+            clickOnClose();
+            phantom.exit();
         });
     }
 });
 
 function clickOnClose() {
    var rect = page.evaluate(function() {
-               // click on close button
-               return document.getElementById("cwp-close").getBoundingClientRect();
+       // click on close button
+       return document.getElementById("cwp-close").getBoundingClientRect();
 });
-           var x = rect.left + rect.width / 2;
-           var y = rect.top + rect.height / 2;
-           console.log("Clicking @ " + x + ", " + y);
-	   page.sendEvent('click', x, y);
-           page.render('webpush_test_2.png');
+    var x = rect.left + rect.width / 2;
+    var y = rect.top + rect.height / 2;
+    console.log("Clicking @ " + x + ", " + y);
+    page.sendEvent('click', x, y);
+    page.render('webpush_test_2.png');
 };
 
 function clickOnAd() {
    var rect = page.evaluate(function() {
-               // click on Ad
-               return document.getElementById("cwp-close").getBoundingClientRect();
+       // click on Ad
+       return document.getElementById("cwp-close").getBoundingClientRect();
 });
-           var x = rect.left + rect.width / 2;
-           var y = rect.top + rect.height / 2;
-           console.log("Clicking @ " + x + ", " + y);
-	   page.sendEvent('click', x, y);
-           page.render('webpush_test_2.png');
+    var x = rect.left + rect.width / 2;
+    var y = rect.top + rect.height / 2;
+    console.log("Clicking @ " + x + ", " + y);
+    page.sendEvent('click', x, y);
+    page.render('webpush_test_2.png');
 };

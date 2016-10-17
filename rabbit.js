@@ -13,6 +13,7 @@ page.onResourceRequested = function (req) {
 page.onResourceReceived = function (res) {
     if (!res.stage || res.stage === 'end') {
 //        console.log('< ' +res.id + ' ' + res.status + ' - ' + res.url);
+        // if overview page request ends then render a page to png
         if (res.url.match('\/api\/overview')) {
             setTimeout(function() {
             page.render('rabbit.png');

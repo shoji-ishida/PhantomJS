@@ -19,6 +19,10 @@ function loadPage(n) {
 };
 
 system = require('system');
+if (system.args.length !== 3) {
+    console.log('Usage: looptest.js <some URL> <thread count>');
+    phantom.exit();
+}
 addr = system.args[1];
 count = system.args[2];
 for (var i = 0; i < count; i++) { 
