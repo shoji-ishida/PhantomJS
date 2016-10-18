@@ -46,6 +46,8 @@ if (system.args.length === 1) {
 var addr = system.args[1];
 var jumpToAd = false;
 
+phantom.injectJs("./push.js");
+
 //console.log("cookie="+phantom.cookiesEnabled);
 page.onConsoleMessage = function(msg) {
     console.log(msg);
@@ -82,6 +84,8 @@ page.open(addr, function (status) {
             page.render('webpush_test_1.png');
 
             // click on close button
+            clickOnClose();
+            sendPushNotification();
             clickOnAd();
             //phantom.exit();
         });
@@ -95,15 +99,16 @@ function clickOnClose() {
 });
     var x = rect.left + rect.width / 2;
     var y = rect.top + rect.height / 2;
-    console.log("Clicking @ " + x + ", " + y);
+    console.log("Clicking close @ " + x + ", " + y);
     page.sendEvent('click', x, y);
     page.render('webpush_test_2.png');
-    phantom.exit();
 };
 
 function clickOnAd() {
+    console.log("Clicking Ad");
     var rect = page.evaluate(function () {
         // click on Ad
         return document.getElementsByClassName("cwp-ImagePhoto")[0].click();
     });
 }
+
