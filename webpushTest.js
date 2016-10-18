@@ -35,7 +35,6 @@ function waitFor(testFx, onReady, timeOutMillis) {
         }, 250); //< repeat check every 250ms
 };
 
-
 var page = require('webpage').create();
 var system = require('system');
 
@@ -45,11 +44,26 @@ if (system.args.length === 1) {
 }
 
 var addr = system.args[1];
+var jumpToAd = false;
 
 //console.log("cookie="+phantom.cookiesEnabled);
 page.onConsoleMessage = function(msg) {
     console.log(msg);
 }
+
+page.onLoadFinished = function(status) {
+    console.log("page.onLoadFinished: " + status);
+    if (jumpToAd) {
+        page.render('webpush_test_3.png');
+        phantom.exit();
+    }
+};
+page.onUrlChanged = function(targetUrl) {
+    console.log("page.onUrlChanged: " + targetUrl);
+    if (targetUrl != addr) {
+        jumpToAd = true;
+    }
+};
 
 page.open(addr, function (status) {
     // Check for page load success
@@ -68,8 +82,8 @@ page.open(addr, function (status) {
             page.render('webpush_test_1.png');
 
             // click on close button
-            clickOnClose();
-            phantom.exit();
+            clickOnAd();
+            //phantom.exit();
         });
     }
 });
@@ -84,16 +98,12 @@ function clickOnClose() {
     console.log("Clicking @ " + x + ", " + y);
     page.sendEvent('click', x, y);
     page.render('webpush_test_2.png');
+    phantom.exit();
 };
 
 function clickOnAd() {
-   var rect = page.evaluate(function() {
-       // click on Ad
-       return document.getElementById("cwp-close").getBoundingClientRect();
-});
-    var x = rect.left + rect.width / 2;
-    var y = rect.top + rect.height / 2;
-    console.log("Clicking @ " + x + ", " + y);
-    page.sendEvent('click', x, y);
-    page.render('webpush_test_2.png');
-};
+    var rect = page.evaluate(function () {
+        // click on Ad
+        return document.getElementsByClassName("cwp-ImagePhoto")[0].click();
+    });
+}
