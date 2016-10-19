@@ -56,7 +56,7 @@ page.onConsoleMessage = function(msg) {
 page.onLoadFinished = function(status) {
     console.log("page.onLoadFinished: " + status);
     if (jumpToAd) {
-        page.render('webpush_test_3.png');
+        page.render('webpush_test_4.png');
         phantom.exit();
     }
 };
@@ -86,8 +86,7 @@ page.open(addr, function (status) {
             // click on close button
             clickOnClose();
             sendPushNotification();
-            clickOnAd();
-            //phantom.exit();
+            waitForPush();
         });
     }
 });
@@ -112,3 +111,24 @@ function clickOnAd() {
     });
 }
 
+function waitForPush() {
+    waitFor(function() {
+        return page.evaluate(function() {
+            var obj = document.querySelector('span.cwp-Headline');
+            if (obj == null) {
+                return false;
+            } else {
+                console.log(obj.innerText);
+                if (obj.innerText == "PhantomJS push") {
+                    return true;
+                } else {
+                    return false;
+                }
+            }
+        });
+    }, function() {
+        console.log("Imediate push is now visible");
+        page.render('webpush_test_3.png');
+        clickOnAd();
+    });
+}
