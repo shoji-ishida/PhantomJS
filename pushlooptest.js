@@ -31,14 +31,14 @@ function loadPage(n) {
 
     page.onConsoleMessage = function(msg) {
         //console.log(msg);
-        if (/onopen/.test(msg)) {
+        if (/sendmessage/.test(msg)) {
             //console.log("ws opened");
             sessionCounts++;
             if (sessionCounts == count) {
-                setTimeout(function() {
+                //setTimeout(function() {
                     console.log(new Date().toLocaleString() + " Ready to push");
                     sendPushNotification("5490a760-1c7a-42b6-ad32-6f13760ce81d", "01902e82-c39f-4088-8f23-6e733b2ee32a");
-                },250);
+                //},250);
             }
         }
     }
