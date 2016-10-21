@@ -56,7 +56,7 @@ page.onConsoleMessage = function(msg) {
 page.onLoadFinished = function(status) {
     console.log("page.onLoadFinished: " + status);
     if (jumpToAd) {
-        page.render('webpush_test_4.png');
+        //page.render('webpush_test_4.png');
         phantom.exit();
     }
 };
@@ -72,20 +72,35 @@ page.open(addr, function (status) {
     if (status !== "success") {
         console.log("Unable to access network");
     } else {
-        page.render('webpush_test_0.png');
+        //page.render('webpush_test_0.png');
         // Wait for push message to be visible
         waitFor(function() {
             // Check in the page if a specific element is now visible
+            //return page.evaluate(function() {
+            //    return $("#cwp-WebpushFrame").is(":visible");
+            //});
             return page.evaluate(function() {
-                return $("#cwp-WebpushFrame").is(":visible");
+                var el = document.getElementById("cwp-WebpushFrame");
+                if (el != null) {
+                    var rect = el.getBoundingClientRect();
+
+                    return (
+                        rect.top >= 0 &&
+                        rect.left >= 0 &&
+                        rect.bottom <= (window.innerHeight || document.documentElement.clientHeight) && /*or $(window).height() */
+                        rect.right <= (window.innerWidth || document.documentElement.clientWidth) /*or $(window).width() */
+                    );
+                } else {
+                    return false;
+                }
             });
         }, function() {
             console.log("The PUSH should be visible now.");
-            page.render('webpush_test_1.png');
+            //page.render('webpush_test_1.png');
 
             // click on close button
             clickOnClose();
-            sendPushNotification();
+            sendPushNotification("b18b2800-7ecb-4f3f-9108-6dd49d5592d2", "01902e82-c39f-4088-8f23-6e733b2ee32a");
             waitForPush();
         });
     }
@@ -100,7 +115,7 @@ function clickOnClose() {
     var y = rect.top + rect.height / 2;
     console.log("Clicking close @ " + x + ", " + y);
     page.sendEvent('click', x, y);
-    page.render('webpush_test_2.png');
+    //page.render('webpush_test_2.png');
 };
 
 function clickOnAd() {
@@ -128,7 +143,7 @@ function waitForPush() {
         });
     }, function() {
         console.log("Imediate push is now visible");
-        page.render('webpush_test_3.png');
+        //page.render('webpush_test_3.png');
         clickOnAd();
     });
 }
