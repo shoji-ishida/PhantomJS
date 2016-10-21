@@ -3,7 +3,7 @@
  */
 phantom.injectJs("./date.js");
 
-function sendPushNotification() {
+function sendPushNotification(app_id, user_ids) {
     var url = "https://stg-platform.webpush.jp/api/b1/messages";
     var date = new Date();
     var format = 'yyyy-MM-dd HH:mm:ss';
@@ -18,8 +18,8 @@ function sendPushNotification() {
                 "X-Provider-Key": "quasar_access_key",
                 "X-Provider-Token": "quasar_access_token"
             },
-            data: JSON.stringify({"application_id": "b18b2800-7ecb-4f3f-9108-6dd49d5592d2",
-                "subscribers": ["a380ecf9-f32c-41f0-946c-169855d01f85", "27b79625-ca94-4a61-99ad-3e10085522af", "01902e82-c39f-4088-8f23-6e733b2ee32a"],
+            data: JSON.stringify({"application_id": app_id,
+                "subscribers": [user_ids],
                 "title": "PhantomJS push",
                 "content": "Immediate push test from PhantomJS",
                 "image": "",
@@ -36,7 +36,7 @@ function sendPushNotification() {
         };
 
     page.open(server, settings, function(status) {
-        console.log('Push Status: ' + status);
+        console.log(new Date().toLocaleString() + ' Push Status: ' + status);
         //console.log(page.plainText);
     });
 }
